@@ -189,7 +189,7 @@ function agregar_producto(){
 
             success: function(respuesta){
 
-                let filaProducto = '<tr><td><button class="btn btn-warning btn-sm"  "><span class="fa fa-times"></span></button></td><td><input type="hidden" class="producto" value="'+respuesta.id+'">'+respuesta.codigo+' '+respuesta.nombre+'</td><td><input type="hidden" class="cantidad" value="'+cantidad+'">'+cantidad+'</td><td><input type="hidden" class="precio" value="'+precio+'">'+precio+'</td><td class="subTotal">'+(cantidad*precio).toFixed(2)+'</td></tr>'
+                let filaProducto = '<tr><td><button class="btn btn-warning btn-sm" onclick="eliminar_articulo_lista(this)" "><span class="fa fa-times"></span></button></td><td><input type="hidden" class="producto" value="'+respuesta.id+'">'+respuesta.codigo+' '+respuesta.nombre+'</td><td><input type="hidden" class="cantidad" value="'+cantidad+'">'+cantidad+'</td><td><input type="hidden" class="precio" value="'+precio+'">'+precio+'</td><td class="subTotal">'+(cantidad*precio).toFixed(2)+'</td></tr>'
 
                 $('#lista_productos').children('tbody').append(filaProducto)
 
@@ -314,5 +314,41 @@ function buscar_ventas(){
         })
     }else{
         $('.alerta-buscador').html('<i class="fa fa-times"> Ingrese un dato para buscar ')
+    }
+
+}
+
+
+
+function eliminar_articulo_lista(input){
+    const filaProducto = $(input).parent().parent()
+    filaProducto.remove()
+
+    if($('.subTotal').length > 0){
+        const subTotal = $('.subTotal')
+        let i 
+        let total = 0
+        let impuesto = 0
+
+        for(i = 0; i < subTotal.length; i++){
+            total += parseFloat($(subTotal[i]).text())
+        }
+
+        impuesto = total * 0.16
+        total += impuesto
+
+        $('#productos').val(1)
+        $('#cantidad').val('')
+        $('#precio').val('')
+
+        $('#impuesto').val(impuesto.toFixed(2))
+        $('#datos_impustos').text('Bs/'+impuesto.toFixed(2))
+        $('#total').val(total.toFixed(2))
+        $('#datoTotal').text('Bs/'+total.toFixed(2))
+    }else{
+        $('#impuesto').val(0.00)
+        $('#datoImpuesto').text('Bs/0.00')
+        $('#total').val(0.00)
+        $('#datoTotal').text('Bs/0.00')
     }
 }
